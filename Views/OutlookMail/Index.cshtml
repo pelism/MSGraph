@@ -1,0 +1,45 @@
+﻿@model List<Pelism.MSGraph.Models.MailItem>
+@{
+    Script.Require("jQuery").AtFoot();
+    Script.Require("jQueryUI_Dialog").AtFoot();
+    Script.Require("Knockout").AtFoot();
+    Style.Require("FontAwesome");
+
+    Layout.Title = T("Outlook Mail");
+}
+
+<h1>Outlook Mail</h1>
+
+<div data-bind="foreach: mail">
+    <div style="padding: 10px 0;border-bottom: 2px gray solid">
+        <div data-bind="click: $parent.load" style="float: left; width: 95%;cursor: pointer">
+            <div data-bind="text: From" style="font-weight: bold"></div>
+            <div data-bind="text: Subject" style="font-weight: bold"></div>
+            <div data-bind="text: Preview"></div>
+        </div>
+        <div style="float: right; width: 5%; cursor: pointer">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>
+
+@using (Script.Foot()) {
+    <script type="text/javascript">
+        //<![CDATA[
+        $(function() {
+            function outlookMailViewModel() {
+                var self = this;
+
+                self.mail = ko.observableArray(@Html.Raw(Json.Encode(Model)));
+
+                self.load = function(mail) {
+                    window.open(mail.WebLink, "blank");
+                };
+            }
+
+            ko.applyBindings(new outlookMailViewModel());
+        })
+        //]]>
+    </script>
+}
